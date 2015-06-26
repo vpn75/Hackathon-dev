@@ -24,6 +24,10 @@ function onSuccess(data) {
         })
     });
 
+    var rs_count = getResultCount(data);
+    var rs_txt = "Total Results: " + rs_count;
+
+    $('#rs_count').append(rs_txt);
 
     $('#links').empty();
 
@@ -89,6 +93,10 @@ function isCanvasSupported(){
     return !!(elem.getContext && elem.getContext('2d'));
 }
 
+function getResultCount(patient) {
+    $('#rs_count').empty();
+    return patient.totalResults;
+}
 
 $(document).ready(function() {
 
