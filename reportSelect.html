@@ -25,7 +25,7 @@ th {
     background-color: #81BEF7
 }
 tr:nth-child(odd) {
-    background-color: #E6E6E6;
+    background: #DEDFE0;
 }
 </style>
 
@@ -65,12 +65,9 @@ tr:nth-child(odd) {
             </div>
             <div class="form-group">
                 <div class="dropdown">
-                    <select name="reportType" ng-model="reportType" value="Report type">
-                    <option value="RAD">Radiology</option>
-                    <option value="SP">Surgical Pathology</option>
-                    <option value="LAB">Laboratory</option>
-                   </select>
-                    </ul>
+                    <select name="reportType" ng-model="reportType" ng-options="r.code as r.display for r in repCat">
+                        <option value="">-- Select ReportType --</option>
+                    </select>
                 </div>
             </div>
             </form>
@@ -78,7 +75,9 @@ tr:nth-child(odd) {
         <div>
         <p>
         <div class="row">
-            <table class="table table-striped">
+            <div class="row" ng-show="reports"><i>Total results: {{ totalResults }}</i>
+            </div>
+            <table class="table">
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -89,12 +88,12 @@ tr:nth-child(odd) {
                 </tr>
                 </thead>
                 <tbody id="reportListTable">
-                <tr ng-repeat="x in reports">
+                <tr ng-repeat="x in reports | filter:name">
                 <td>{{ x.content.subject.reference.split("/")[1] }}
                 <td>{{ x.content.issued }}</td>
                 <td>{{ x.content.identifier.value }}</td>
                 <td>{{ x.content.name.text }}</td>
-                <td>{{ x.content.serviceCategory.coding[0].code }}</td>
+                <td>{{ totalResults }}</td>
                 </tbody>
             </table>
      
@@ -106,6 +105,52 @@ tr:nth-child(odd) {
 var app = angular.module('reportSelect',[]);
 
 app.controller('rsCtrl', function($scope,$http) {
+    
+    $scope.repCat = 
+        [
+            {"code":"AU","display":"Audiology"},
+            {"code":"BG","display":"Blood Gases"},
+            {"code":"BLB","display":"Blood Bank"},
+            {"code":"CH","display":"Chemistry"},
+            {"code":"CP","display":"Cytopathology"},
+            {"code":"CT","display":"CAT Scan"},
+            {"code":"CTH","display":"Cardiac Catheterization"},
+            {"code":"CUS","display":"Cardiac Ultrasound"},
+            {"code":"EC","display":"Electrocardiac (e.g., EKG,  EEC, Holter)"},
+            {"code":"EN","display":"Electroneuro (EEG, EMG,EP,PSG)"},
+            {"code":"HM","display":"Hematology"},
+            {"code":"ICU","display":"Bedside ICU Monitoring"},
+            {"code":"IMG","display":"Diagnostic Imaging"},
+            {"code":"IMM","display":"Immunology"},
+            {"code":"LAB","display":"Laboratory"},
+            {"code":"MB","display":"Microbiology"},
+            {"code":"MCB","display":"Mycobacteriology"},
+            {"code":"MYC","display":"Mycology"},
+            {"code":"NMR","display":"Nuclear Magnetic Resonance"},
+            {"code":"NMS","display":"Nuclear Medicine Scan"},
+            {"code":"NRS","display":"Nursing Service Measures"},
+            {"code":"OSL","display":"Outside Lab"},
+            {"code":"OT","display":"Occupational Therapy"},
+            {"code":"OTH","display":"Other"},{"code":"OUS","display":"OB Ultrasound"},
+            {"code":"PAR","display":"Parasitology"},
+            {"code":"PAT","display":"Pathology (gross & histopath, not surgical)"},
+            {"code":"PF","display":"Pulmonary Function"},
+            {"code":"PHR","display":"Pharmacy"},
+            {"code":"PHY","display":"Physician (Hx. Dx, admission note, etc.)"},
+            {"code":"PT","display":"Physical Therapy"},
+            {"code":"RAD","display":"Radiology"},
+            {"code":"RC","display":"Respiratory Care (therapy)"},
+            {"code":"RT","display":"Radiation Therapy"},
+            {"code":"RUS","display":"Radiology Ultrasound"},
+            {"code":"RX","display":"Radiograph"},
+            {"code":"SP","display":"Surgical Pathology"},
+            {"code":"SR","display":"Serology"},
+            {"code":"TX","display":"Toxicology"},
+            {"code":"URN","display":"Urinalysis"},
+            {"code":"VR","display":"Virology"},
+            {"code":"VUS","display":"Vascular Ultrasound"},
+            {"code":"XRC","display":"Cineradiograph"}
+        ]
     
     
     $scope.fetch = function() {
@@ -123,7 +168,8 @@ app.controller('rsCtrl', function($scope,$http) {
             }
         }
         
-        $http.get(url,req).success(function(data,status,headers,config) {
+        $http.get(url,req).success(function(data) {
+            $scope.totalResults = data.totalResults;
             $scope.reports = data.entry;
             console.log(data);
         });
