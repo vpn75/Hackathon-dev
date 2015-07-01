@@ -51,7 +51,7 @@ tr:nth-child(odd) {
             </div>
             <div class="form-group">
                 <div class="dropdown">
-                    <select name="reportType" class="form-control" ng-model="reportType" ng-options="r.code as r.display for r in repCat">
+                    <select name="reportType" class="form-control"ng-model="reportType" ng-options="r.code as r.display for r in repCat">
                         <option value="">-- Select ReportType --</option>
                     </select>
                 </div>
@@ -61,6 +61,11 @@ tr:nth-child(odd) {
         <div>
         <p>
         <div class="row">
+            <div id="links" class="row">
+                <span ng-repeat="nav in navlinks">
+                <button class='btn' ng-click="navSnapshot(nav.href)">{{nav.rel}}</button>
+                </span>
+            </div>
             <div class="row" ng-show="reports"><i>Total results: {{ totalResults }}</i>
             </div>
             <table class="table">
