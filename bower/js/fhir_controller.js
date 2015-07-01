@@ -57,7 +57,12 @@ angular.module('FHIRapp.controllers',[]).
             if ($scope.name) {
                 urlparams.subject = "Patient/" + $scope.name;
             }
+            if ($scope.status) {
+                urlparams.status = $scope.status;
+            }
+
             urlparams.service = $scope.reportType;
+            
             FHIRqueryservice.getPatientReports(urlparams).success(function (response) {
                
                 $scope.reports = response.entry;
@@ -89,7 +94,18 @@ angular.module('FHIRapp.controllers',[]).
             //console.log(links);
             return links;
         }
-    
+        
+        $scope.setStylebyStatus = function (status) {
+            var style = {};
+            if (status === 'partial') {
+                style["background-color"] = "#FFFFCC";
+            }
+            else {
+                style["background-color"] = "white";
+            }
+            return style;
+        }
+
     }
 /*
     $scope.setName = function(subject) {

@@ -25,9 +25,7 @@ td, th {
 th {
     background-color: #81BEF7
 }
-tr:nth-child(odd) {
-    background: #DEDFE0;
-}
+
 </style>
 
 </HEAD>
@@ -37,7 +35,7 @@ tr:nth-child(odd) {
 <div class="container" ng-app="FHIRapp" ng-controller="reportSelectController">
     <div class="row">
         <div class="jumbotron">
-            <h2>FHIR/DICOMWeb Dev Project by Vamsi Nath</h2>
+            <h2>FHIR/DICOMWeb Dev Project</h2>
             Radiology EMR client based on FHIR and DICOMweb REST API's.  Select a patient's reports based on type
         </div>
     </div>
@@ -51,10 +49,19 @@ tr:nth-child(odd) {
             </div>
             <div class="form-group">
                 <div class="dropdown">
-                    <select name="reportType" class="form-control"ng-model="reportType" ng-options="r.code as r.display for r in repCat">
+                    <select name="reportType" class="form-control" ng-model="reportType" ng-options="r.code as r.display for r in repCat">
                         <option value="">-- Select ReportType --</option>
                     </select>
                 </div>
+            </div>
+            <div class="form-group">
+                <div class="dropdown">
+                    <select class="form-control" ng-model="status">
+                        <option value=''>--Select Report Status--</option>
+                        <option value='final'>Final</option>
+                        <option value='partial'>Partial</option>
+                    </select>
+                </div>    
             </div>
             </form>
         </div>
@@ -75,16 +82,16 @@ tr:nth-child(odd) {
                     <th>Date</th>
                     <th>Acc#</th>
                     <th>Text</th>
-                    <th>Type</th>
+                    <th>Status</th>
                 </tr>
                 </thead>
                 <tbody id="reportListTable">
-                <tr ng-repeat="x in reports">
+                <tr ng-style="setStylebyStatus(x.content.status)" ng-repeat="x in reports">
                 <td>{{ x.content.subject.reference.split("/")[1] }}
                 <td>{{ x.content.issued }}</td>
                 <td>{{ x.content.identifier.value }}</td>
                 <td>{{ x.content.name.text }}</td>
-                <td>{{ reportType }}</td>
+                <td>{{ x.content.status | uppercase}}</td>
                 </tbody>
             </table>
      
