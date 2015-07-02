@@ -1,4 +1,7 @@
-angular.module('FHIRapp',[
+angular.module('FHIRapp', 
+[
 	'FHIRapp.controllers',
-	'FHIRapp.services'
+	'FHIRapp.services',
+	'ngRoute',
+	'ngSanitize'
 ]);

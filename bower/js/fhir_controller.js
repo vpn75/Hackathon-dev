@@ -1,6 +1,6 @@
-angular.module('FHIRapp.controllers',[]).
+angular.module('FHIRapp.controllers',['ngSanitize']).
 
-    controller('reportSelectController', function($scope, FHIRqueryservice) {
+    controller('reportSelectController', function($scope, $sce, FHIRqueryservice) {
     
     //Official Report Categories from HL7/FHIR standard
         $scope.repCat = 
@@ -106,6 +106,11 @@ angular.module('FHIRapp.controllers',[]).
             return style;
         }
 
+        $scope.displayReport = function (text, title, identifier) {
+            $scope.reportBody = text;
+            $scope.reportTitle = title;
+            $scope.accession = identifier;
+        }
     }
 /*
     $scope.setName = function(subject) {

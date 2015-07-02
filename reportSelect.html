@@ -3,10 +3,12 @@
 <HEAD>
     <link href="bower/css/bootstrap.min.css" rel="stylesheet">
     <link href="bower/css/cornerstone.css" rel="stylesheet">
-
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+    <script src="bower/js/angular-route.min.js"></script>
+    <script src="bower/js/angular-sanitize.min.js"></script>
     <script src="bower/js/jquery.min.js"></script>
     <script src="bower/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
     <script src="bower/js/fhir_app.js"></script>   
     <script src="bower/js/fhir_controller.js"></script>
     <script src="bower/js/fhir_service.js"></script>
@@ -23,9 +25,9 @@ td, th {
     padding: 5px;
 }
 th {
-    background-color: #81BEF7
+    background-color: #337ab7;
+    color: white;
 }
-
 </style>
 
 </HEAD>
@@ -73,9 +75,11 @@ th {
                 <button class='btn' ng-click="navSnapshot(nav.href)">{{nav.rel}}</button>
                 </span>
             </div>
-            <div class="row" ng-show="reports"><i>Total results: {{ totalResults }}</i>
+            <br>
+            <div class="row" ng-show="reports"><i>Total results: </i> <span class="badge"> {{ totalResults }}   </span>
+            <a href="#" ng-show="reportBody" ng-click="reportBody=''">Back to results</a>
             </div>
-            <table class="table">
+            <table class="table" ng-hide="reportBody">
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -91,10 +95,19 @@ th {
                 <td>{{ x.content.issued }}</td>
                 <td>{{ x.content.identifier.value }}</td>
                 <td>{{ x.content.name.text }}</td>
-                <td>{{ x.content.status | uppercase}}</td>
+                <td><a href="#" ng-click="displayReport(x.content.text.div, x.content.name.text, x.content.identifier.value)" title="View Report">{{ x.content.status | uppercase}}</a></td>
                 </tbody>
             </table>
-     
+     </div>
+     <div class="row" ng-show="reportBody">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                Title: {{reportTitle}}<br>
+                Accession: {{accession}}
+                </h4>
+            </div>
+            <div class="panel-body" ng-bind-html="reportBody"></div>
         </div>
 </div>
 
