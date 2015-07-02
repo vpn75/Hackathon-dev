@@ -76,8 +76,7 @@ th {
                 </span>
             </div>
             <br>
-            <div class="row" ng-show="reports"><i>Total results: </i> <span class="badge"> {{ totalResults }}   </span>
-            <a href="#" ng-show="reportBody" ng-click="reportBody=''">Back to results</a>
+            <div class="row"><span ng-show="totalResults"><i>Total results: </i>{{ totalResults }}</span>
             </div>
             <table class="table" ng-hide="reportBody">
                 <thead>
@@ -106,6 +105,7 @@ th {
                 Title: {{reportTitle}}<br>
                 Accession: {{accession}}
                 </h4>
+                <h4 class="text-right"><a href="#" style="{color:white}" ng-click="reportBody=''">Back to results</a></h4>
             </div>
             <div class="panel-body" ng-bind-html="reportBody"></div>
         </div>

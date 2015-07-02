@@ -68,6 +68,7 @@ angular.module('FHIRapp.controllers',['ngSanitize']).
                 $scope.reports = response.entry;
                 $scope.totalResults = response.totalResults;
                 $scope.navlinks = $scope.navButton(response.link);
+                $scope.reportBody = '';
                 console.log(response);
             });
 
