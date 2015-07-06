@@ -25,6 +25,15 @@ angular.module('FHIRapp.services', [])
 		});	
 	}
 
+	fhirAPI.getPatient = function (id) {
+		return $http.get(fhir_patient_url + '/' + id,
+		{
+			headers: {
+				"Accept" : "application/json"
+			}	
+		});
+	}
+
 	fhirAPI.getSnapshot = function(url) {
 		return $http.get(url,
 		{

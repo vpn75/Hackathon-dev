@@ -1,53 +1,17 @@
 angular.module('FHIRapp.controllers',['ngSanitize']).
 
-    controller('reportSelectController', function($scope, $sce, FHIRqueryservice) {
+    controller('reportSelectController', function($scope, FHIRqueryservice) {
     
     //Official Report Categories from HL7/FHIR standard
         $scope.repCat = 
             [
-                {"code":"AU","display":"Audiology"},
-                {"code":"BG","display":"Blood Gases"},
-                {"code":"BLB","display":"Blood Bank"},
+                
                 {"code":"CH","display":"Chemistry"},
-                {"code":"CP","display":"Cytopathology"},
-                {"code":"CT","display":"CAT Scan"},
-                {"code":"CTH","display":"Cardiac Catheterization"},
-                {"code":"CUS","display":"Cardiac Ultrasound"},
-                {"code":"EC","display":"Electrocardiac"},
-                {"code":"EN","display":"Electroneuro"},
                 {"code":"HM","display":"Hematology"},
-                {"code":"ICU","display":"Bedside ICU Monitoring"},
-                {"code":"IMG","display":"Diagnostic Imaging"},
-                {"code":"IMM","display":"Immunology"},
                 {"code":"LAB","display":"Laboratory"},
-                {"code":"MB","display":"Microbiology"},
-                {"code":"MCB","display":"Mycobacteriology"},
-                {"code":"MYC","display":"Mycology"},
-                {"code":"NMR","display":"Nuclear Magnetic Resonance"},
-                {"code":"NMS","display":"Nuclear Medicine Scan"},
-                {"code":"NRS","display":"Nursing Service Measures"},
-                {"code":"OSL","display":"Outside Lab"},
-                {"code":"OT","display":"Occupational Therapy"},
-                {"code":"OTH","display":"Other"},
-                {"code":"OUS","display":"OB Ultrasound"},
-                {"code":"PAR","display":"Parasitology"},
-                {"code":"PAT","display":"Pathology"},
-                {"code":"PF","display":"Pulmonary Function"},
-                {"code":"PHR","display":"Pharmacy"},
-                {"code":"PHY","display":"Physician"},
-                {"code":"PT","display":"Physical Therapy"},
                 {"code":"RAD","display":"Radiology"},
                 {"code":"RC","display":"Respiratory Care (therapy)"},
-                {"code":"RT","display":"Radiation Therapy"},
-                {"code":"RUS","display":"Radiology Ultrasound"},
-                {"code":"RX","display":"Radiograph"},
-                {"code":"SP","display":"Surgical Pathology"},
-                {"code":"SR","display":"Serology"},
-                {"code":"TX","display":"Toxicology"},
-                {"code":"URN","display":"Urinalysis"},
-                {"code":"VR","display":"Virology"},
-                {"code":"VUS","display":"Vascular Ultrasound"},
-                {"code":"XRC","display":"Cineradiograph"}
+            
             ];
 
 
@@ -72,7 +36,9 @@ angular.module('FHIRapp.controllers',['ngSanitize']).
                 console.log(response);
             });
 
-       $scope.navSnapshot = function(url) {
+        }
+
+        $scope.navSnapshot = function(url) {
             FHIRqueryservice.getSnapshot(url)
                 .success(function (response) {
                     $scope.reports = response.entry;
@@ -112,38 +78,90 @@ angular.module('FHIRapp.controllers',['ngSanitize']).
             $scope.reportTitle = title;
             $scope.accession = identifier;
         }
-    }
-/*
-    $scope.setName = function(subject) {
-        
-        var name = FHIRqueryservice.getPatientName(subject);
-        return name.family + ',' + name.given;
+    
+}).
+
+controller('reportController', function($scope, $routeParams, FHIRqueryservice) {
+    
+    $scope.id = $routeParams.id;
+
+    var urlparams = {};
+    urlparams.subject = "Patient/" + $routeParams.id;
+
+    $scope.selectedRow = null;
+
+    $scope.setClickedRow = function (index) {
+        $scope.selectedRow = ($scope.selectedRow == index) ? null : index;
+        console.log("Clicked row# " + index);
     }
 
-    $scope.fetch = function() {
-        var url = "http://fhir.hackathon.siim.org/fhir/DiagnosticReport";
-        var urlparams = {};
-        if ($scope.name) {
-            urlparams.subject = "Patient/" + $scope.name;
+    FHIRqueryservice.getPatientReports(urlparams)
+        .success(function (response) {
+            $scope.reports = response.entry;
+            $scope.totalResults = response.totalResults;
+            $scope.navlinks = $scope.navButton(response.link);
+            $scope.reportBody = '';
+            console.log(response);
+        });
+
+    FHIRqueryservice.getPatient($routeParams.id)
+        .success(function (response) {
+            $scope.name = response.name[0];
+            $scope.mrn = response.identifier[0].value;
+            $scope.DOB = response.birthDate;
+            $scope.gender = response.gender.coding[0].display;
+        })
+
+        $scope.displayfullName = function(name) {
+            var family = name.family ? name.family[0] : '';
+            var given = name.given ? name.given[0] : '';
+            return family + ", " + given;
         }
-        urlparams.service = $scope.reportType;
 
-        var req = {
-            params:urlparams,
-            headers: {
-                "Accept" : "application/json"
+       $scope.navSnapshot = function(url) {
+            FHIRqueryservice.getSnapshot(url)
+                .success(function (response) {
+                    $scope.reports = response.entry;
+                    console.log(response);
+                    $scope.navlinks = $scope.navButton(response.link);
+
+                });
+        }
+
+        $scope.navButton = function (navlink) {
+            var links = [];
+            for(var i=0; i < navlink.length; ++i) {
+                if (navlink[i].rel === "self" || navlink[i].rel === "fhir-base") {
+                    //Do nothing
+                }
+                else {
+                    links.push(navlink[i]);
+                }
             }
+            //console.log(links);
+            return links;
         }
         
-        $http.get(url,req).success(function(data) {
-            $scope.totalResults = data.totalResults;
-            $scope.reports = data.entry;
-            console.log(data);
-        }); 
-    }       */  
-    }).
+        $scope.setStylebyStatus = function (status) {
+            var style = {};
+            if (status === 'partial') {
+                style["background-color"] = "#FFFFCC";
+            }
+            else {
+                style["background-color"] = "white";
+            }
+            return style;
+        }
 
-    controller('patientController', function($scope, FHIRqueryservice) {
+        $scope.displayReport = function (text, title, identifier) {
+            $scope.reportBody = text;
+            $scope.reportTitle = title;
+            $scope.accession = identifier;
+        }
+}).
+
+
+controller('patientController', function($scope, FHIRqueryservice) {
 
         $scope.fetchPatients = function() {
             var urlparams = {};

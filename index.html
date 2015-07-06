@@ -4,12 +4,43 @@
     <link href="bower/css/bootstrap.min.css" rel="stylesheet">
     <link href="bower/css/cornerstone.css" rel="stylesheet">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+    <script src="bower/js/angular-route.min.js"></script>
+    <script src="bower/js/angular-sanitize.min.js"></script>
+    <script src="bower/js/jquery.min.js"></script>
+    <script src="bower/js/bootstrap.min.js"></script>
+    <script src="bower/js/fhir_app.js"></script>   
+    <script src="bower/js/fhir_controller.js"></script>
+    <script src="bower/js/fhir_service.js"></script>
+
+<style>
+table {
+    border-collapse: collapse;
+    width: 30%;
+}
+table, th, td {
+    border: 1px solid black;
+}
+td, th {
+    padding: 5px;
+}
+th {
+    background-color: #337ab7;
+    color: white;
+}
+
+.selected {
+    background-color: #FFFFCC;
+    font-weight: bold;
+}
+
+</style>
 
 </HEAD>
 <BODY>
 
 
-<div class="container">
+<div class="container" ng-app="FHIRapp">
     <div class="row">
         <div class="jumbotron">
             <h2>FHIR/DICOMWeb Dev Project</h2>
@@ -18,67 +49,10 @@
         </div>
     </div>
     <div id="main">
-        <div class="row">
-            <form id="searchForm" class="form-inline" role="form">
-                <button type="submit" class="btn btn-primary">Search</button>
-                <div class="form-group">
-                    <label for="inputName" class="">Name</label>
-                    <input type="text" class="from-control" id="inputName" placeholder="" value="SIIM">
-                </div>
-                <div class="form-group">
-                    <label for="inputPatientId" class="">Patient ID</label>
-                    <input type="text" class="from-control" id="inputPatientId" placeholder="">
-                </div>
-                <div class="form-group">
-                    <label for="inputGender" class="">Gender</label>
-                    <select class="form-control" id="inputGender">
-                        <option></option>
-                        <option>M</option>
-                        <option>F</option>
-                    </select>
-            </form>
-        </div>
-        <div class="row">
-            <div id="links" class="row">
-            </div>
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>Patient Name</th>
-                    <th>Patient ID</th>
-                    <th>Gender</th>
-                    <th>DOB</th>
-                </tr>
-                </thead>
-                <tbody id="patientList">
-                </tbody>
-            </table>
-        </div>
-        <div id="rs_count" class="text-primary"></div>
+        <ng-view></ng-view>
     </div>
 
 </div>
 
-
-
-
 </BODY>
-
-<!-- may need to reorder the load... -->
-<script src="bower/js/jquery.min.js"></script>
-<script src="bower/js/bootstrap.min.js"></script>
-<script src="bower/js/cornerstone.js"></script>
-<script src="bower/js/cornerstoneMath.js"></script>
-<script src="bower/js/cornerstoneTools.js"></script>
-<script src="bower/js/cornerstoneWADOImageLoader.js"></script>
-<script src="bower/js/cornerstoneWebImageLoader.js"></script>
-<script src="bower/js/dicomParser.js"></script>
-<script src="bower/js/jpx.js"></script>
-
-<script src="config.js"></script>
-<script src="util.js"></script>
-<script src="main.js"></script>
-
-
-
 </HTML>
