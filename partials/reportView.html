@@ -1,5 +1,5 @@
-        <div class="row">
-        <a href="./#">Back to Patients</a>
+        <div class="row" ng-cloak>
+        <a href="#/Patients">Back to Patients</a>
             <div class="panel panel-default">
                 <div class="panel-heading">
                 <h4 class="panel-title">
@@ -7,10 +7,12 @@
                 </h4>
                 </div>
                 <div class="panel-body">
-                    <b>{{displayfullName(name)}}</b><br>
-                    MRN: {{mrn}}<br>
-                    Gender: {{gender}}<br>
-                    DOB: {{DOB}}
+                    <span>
+                        <b>{{displayfullName(name)}}</b><br>
+                        MRN: {{mrn}}<br>
+                        Gender: {{gender}}<br>
+                        DOB: {{DOB}}
+                    </span>
                 </div>
             </div>
         </div>
@@ -34,10 +36,10 @@
                 </tr>
                 </thead>
                 <tbody id="reportListTable">
-                <tr ng-class="($index == selectedRow) ? 'selected' : ''" ng-repeat="x in reports" ng-click="setClickedRow($index); displayReport(x.content.text.div, x.content.name.text, x.content.identifier.value) ">
+                <tr ng-class="($index == selectedRow) ? 'selected' : ''" ng-repeat="x in reports" ng-click="displayReport(x.content.text.div, x.content.name.text, x.content.identifier.value); setClickedRow($index) ">
                 <td>{{ displayfullName(name) }}
                 <td>{{ x.content.issued }}</td>
-                <td>{{ x.content.identifier.value }}</td>
+                <td><a href="/Study/{{ x.content.identifier.value }}">{{ x.content.identifier.value }}</a></td>
                 <td>{{ x.content.name.text }}</td>
                 <td>{{ x.content.status | uppercase}}</td>
                 </tbody>

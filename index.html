@@ -34,6 +34,10 @@ th {
     font-weight: bold;
 }
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
+    display: none !important;
+}
+
 </style>
 
 </HEAD>
@@ -44,8 +48,7 @@ th {
     <div class="row">
         <div class="jumbotron">
             <h2>FHIR/DICOMWeb Dev Project</h2>
-            Radiology EMR client based on FHIR and DICOMweb REST API's.  Select a patient below to see their
-            radiology reports and images.
+            Radiology EMR client based on FHIR and DICOMweb REST API's. 
         </div>
     </div>
     <div id="main">

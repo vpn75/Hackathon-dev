@@ -1,11 +1,13 @@
 angular.module('FHIRapp.services', [])
-.factory('FHIRqueryservice', function($http) {
+.factory('FHIRqueryservice', function ($http) {
 
 	var fhirAPI = {};
-	var fhir_report_url = "http://fhir.hackathon.siim.org/fhir/DiagnosticReport";
-	var fhir_patient_url = "http://fhir.hackathon.siim.org/fhir/Patient";
+	var fhir_base = "http://fhir.hackathon.siim.org/fhir";
+	var fhir_report_url = fhir_base + "/DiagnosticReport";
+	var fhir_patient_url = fhir_base + "/Patient";
+	var fhir_study_url = fhir_base + "/ImagingStudy"
 
-	fhirAPI.getPatientReports = function(params) {
+	fhirAPI.getPatientReports = function (params) {
 		return $http.get(fhir_report_url,
 		{
 			headers: {
@@ -15,7 +17,7 @@ angular.module('FHIRapp.services', [])
 		});	
 	}
 
-	fhirAPI.getPatients = function(params) {
+	fhirAPI.getPatients = function (params) {
 		return $http.get(fhir_patient_url,
 		{
 			headers: {
@@ -34,7 +36,7 @@ angular.module('FHIRapp.services', [])
 		});
 	}
 
-	fhirAPI.getSnapshot = function(url) {
+	fhirAPI.getSnapshot = function (url) {
 		return $http.get(url,
 		{
 			headers: {
@@ -42,24 +44,17 @@ angular.module('FHIRapp.services', [])
 			}
 		});
 	}
-/*
-fhirAPI.getPatientName = function(subject) {
-	var patient_query_url = fhir_patient_url + '?' + subject;
-	$http.get(fhir_patient_url,
+
+	fhirAPI.getStudy = function (accession) {
+		return $http.get(fhir_study_url,
 		{
 			headers: {
-            	"Accept" : "application/json"
-            }
-		}).success(function(data) {
-			var fullName = {};
-			fullName.family = data.entry.name.family[0];
-			fullName.given = data.entry.name.given[0];
-
-			return fullName;
-		})
+				"Accept" : "application/json"
+			},
+			params: accession
+		});
 	}
-*/
-	return fhirAPI;
 
+	return fhirAPI;
 
 });

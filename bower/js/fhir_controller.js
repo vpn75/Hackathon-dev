@@ -38,7 +38,7 @@ angular.module('FHIRapp.controllers',['ngSanitize']).
 
         }
 
-        $scope.navSnapshot = function(url) {
+        $scope.navSnapshot = function (url) {
             FHIRqueryservice.getSnapshot(url)
                 .success(function (response) {
                     $scope.reports = response.entry;
@@ -48,7 +48,7 @@ angular.module('FHIRapp.controllers',['ngSanitize']).
                 });
         }
 
-        $scope.navButton = function(navlink) {
+        $scope.navButton = function (navlink) {
             var links = [];
             for(var i=0; i < navlink.length; ++i) {
                 if (navlink[i].rel === "self" || navlink[i].rel === "fhir-base") {
@@ -91,9 +91,26 @@ controller('reportController', function($scope, $routeParams, FHIRqueryservice) 
     $scope.selectedRow = null;
 
     $scope.setClickedRow = function (index) {
-        $scope.selectedRow = ($scope.selectedRow == index) ? null : index;
-        console.log("Clicked row# " + index);
+       //$scope.selectedRow = index;
+         //$scope.selectedRow = ($scope.selectedRow == index) ? null : index;
+
+         if ($scope.selectedRow == index) {
+            $scope.selectedRow = null;
+            $scope.reportBody = '';
+         } else {
+            $scope.selectedRow = index;
+         }
+        //console.log("Clicked row# " + index);
     }
+
+     FHIRqueryservice.getPatient($scope.id)
+        .success(function (response) {
+            console.log(response);
+            $scope.name = response.name[0];
+            $scope.mrn = response.identifier[0].value;
+            $scope.DOB = response.birthDate;
+            $scope.gender = response.gender.coding[0].display;
+        });
 
     FHIRqueryservice.getPatientReports(urlparams)
         .success(function (response) {
@@ -104,17 +121,12 @@ controller('reportController', function($scope, $routeParams, FHIRqueryservice) 
             console.log(response);
         });
 
-    FHIRqueryservice.getPatient($routeParams.id)
-        .success(function (response) {
-            $scope.name = response.name[0];
-            $scope.mrn = response.identifier[0].value;
-            $scope.DOB = response.birthDate;
-            $scope.gender = response.gender.coding[0].display;
-        })
 
         $scope.displayfullName = function(name) {
+            //console.log(name);
             var family = name.family ? name.family[0] : '';
             var given = name.given ? name.given[0] : '';
+            //console.log(family)
             return family + ", " + given;
         }
 

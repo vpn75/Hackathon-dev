@@ -12,9 +12,9 @@ config(['$routeProvider', function ($routeProvider) {
 				controller: "reportController"
 			}).
 		//when("/Studies/:id"), {templateUrl: "partials/studyView.html", controller: "studyController"}.
-		when("/", {
+		when("/Patients", {
 				templateUrl: "partials/patients.html",
 				controller: "patientController"
 			}).
-		otherwise({redirectTo: "/"});
+		otherwise({redirectTo: "/Patients"});
 }]);
